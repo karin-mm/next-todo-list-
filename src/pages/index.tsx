@@ -1,67 +1,3 @@
-// import { useTodos } from "@/context/tododata";
-// import { useState } from "react";
-// import {
-//   Box,
-//   Typography,
-//   Paper,
-//   List,
-//   ListItem,
-//   ListItemText,
-//   TextField,
-//   Button,
-// } from "@mui/material";
-
-// export default function Home() {
-//   const { todos, addTodo } = useTodos();
-//   const [newTodo, setNewTodo] = useState("");
-
-//   return (
-//     <Box sx={{ p: 4, backgroundColor: "background.default", minHeight: "100vh" }}>
-//       <Paper sx={{ p: 3, maxWidth: 500, margin: "0 auto" }} elevation={3}>
-//         <Typography variant="h4" gutterBottom>
-//           Todo List
-//         </Typography>
-//         <List>
-//           {todos.map((todo) => (
-//             <ListItem key={todo.id} sx={{ backgroundColor: "background.paper", mb: 1, borderRadius: 1 }}>
-//               <ListItemText primary={todo.text} />
-//             </ListItem>
-//           ))}
-//         </List>
-//         <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
-//           <TextField
-//             value={newTodo}
-//             onChange={(e) => setNewTodo(e.target.value)}
-//             variant="outlined"
-//             label="New Task"
-//             fullWidth
-//           />
-//           <Button
-//             variant="contained"
-//             color="primary"
-//             onClick={() => {
-//               if (newTodo.trim()) {
-//                 addTodo(newTodo);
-//                 setNewTodo("");
-//               }
-//             }}
-//           >
-//             Add
-//           </Button>
-//         </Box>
-//       </Paper>
-//     </Box>
-//   );
-// }
-
-
-
-
-
-
-
-
-
 import { useTodos } from "@/context/tododata";
 import { useState } from "react";
 import {
@@ -88,7 +24,6 @@ export default function Home() {
           Todo List
         </Typography>
 
-        {/* Add new task */}
         <Box sx={{ display: "flex", gap: 1, mb: 3 }}>
           <TextField
             value={newTodo}
@@ -111,7 +46,6 @@ export default function Home() {
           </Button>
         </Box>
 
-        {/* Todo list */}
         <List>
           {todos.map((todo) => (
             <ListItem
