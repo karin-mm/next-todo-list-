@@ -1,112 +1,115 @@
-import { useTodos } from "@/context/tododata";
-import { useState } from "react";
-import {
-  Box,
-  Typography,
-  Paper,
-  List,
-  ListItem,
-  ListItemText,
-  TextField,
-  Button,
-} from "@mui/material";
+import React, { useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/app/store";
+
+import { Box, Typography, ListItem, ListItemText } from "@mui/material";
+import KTextField from "@/components/textfield/ktextfield";
+import KButton from "@/components/button/kbutton";
+import KList from "@/components/list/klist";
 
 export default function Home() {
-  const { todos, addTodo, deleteTodo, editTodo } = useTodos();
-  const [newTodo, setNewTodo] = useState("");
+  const todos = useSelector((s: RootState) => s.todos.items);
+
+  const [newText, setNewText] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState("");
 
+  const newInputRef = useRef<HTMLInputElement>(null);
+
   return (
-    <Box sx={{ p: 4, backgroundColor: "background.default", minHeight: "100vh" }}>
-      <Paper sx={{ p: 3, maxWidth: 500, margin: "0 auto" }} elevation={3}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default", p: 3 }}>
+      <Box
+        sx={{
+          maxWidth: 720,
+          mx: "auto",
+          p: 3,
+          bgcolor: "background.paper",
+          borderRadius: 2,
+          boxShadow: 3,
+        }}
+      >
         <Typography variant="h4" gutterBottom>
-          Todo List
+          Todo App
         </Typography>
 
         <Box sx={{ display: "flex", gap: 1, mb: 3 }}>
-          <TextField
-            value={newTodo}
-            onChange={(e) => setNewTodo(e.target.value)}
-            variant="outlined"
-            label="New Task"
-            fullWidth
+          <KTextField
+            ref={newInputRef}
+            type="new"
+            value={newText}
+            onChangeValue={setNewText}
+            placeholder="Type a task and hit Enter"
           />
-          <Button
-            variant="contained"
-            color="primary"
+          <KButton
+            type="add"
+            payloadText={newText}
             onClick={() => {
-              if (newTodo.trim()) {
-                addTodo(newTodo);
-                setNewTodo("");
-              }
+              setNewText("");
+              newInputRef.current?.focus();
             }}
           >
             Add
-          </Button>
+          </KButton>
         </Box>
 
-        <List>
-          {todos.map((todo) => (
+        <KList>
+          {todos.map((t) => (
             <ListItem
-              key={todo.id}
+              key={t.id}
               sx={{
-                backgroundColor: "background.paper",
+                bgcolor: "background.paper",
                 mb: 1,
                 borderRadius: 1,
                 display: "flex",
                 justifyContent: "space-between",
               }}
             >
-              {editingId === todo.id ? (
-                <TextField
+              {editingId === t.id ? (
+                <KTextField
+                  type="edit"
                   value={editingText}
-                  onChange={(e) => setEditingText(e.target.value)}
+                  onChangeValue={setEditingText}
+                  targetId={t.id}
                   size="small"
+                  autoFocus
                 />
               ) : (
-                <ListItemText primary={todo.text} />
+                <ListItemText primary={t.text} />
               )}
 
-              <Box sx={{ display: "flex", gap: 1 }}>
-                {editingId === todo.id ? (
-                  <Button
-                    size="small"
-                    variant="contained"
-                    color="primary"
+              <Box sx={{ display: "flex", gap: 1, ml: 2 }}>
+                {editingId === t.id ? (
+                  <KButton
+                    type="save"
+                    targetId={t.id}
+                    payloadText={editingText}
                     onClick={() => {
-                      editTodo(todo.id, editingText);
                       setEditingId(null);
+                      setEditingText("");
                     }}
                   >
                     Save
-                  </Button>
+                  </KButton>
                 ) : (
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    color="secondary"
+                  <KButton
+                    type="edit"
                     onClick={() => {
-                      setEditingId(todo.id);
-                      setEditingText(todo.text);
+                      setEditingId(t.id);
+                      setEditingText(t.text);
                     }}
                   >
                     Edit
-                  </Button>
+                  </KButton>
                 )}
-                <Button
-                  size="small"
-                  variant="outlined"
-                  color="error"
-                  onClick={() => deleteTodo(todo.id)}
-                >
+
+                <KButton type="delete" targetId={t.id}>
                   Delete
-                </Button>
+                </KButton>
               </Box>
             </ListItem>
           ))}
-        </List>
-      </Paper>
+        </KList>
+      </Box>
     </Box>
   );
 }

@@ -1,15 +1,16 @@
 import type { AppProps } from "next/app";
-import { TodoProvider } from "@/context/tododata";
+import { Provider } from "react-redux";
+import { store } from "@/app/store";
 import { ThemeProvider, CssBaseline } from "@mui/material";
-import { theme } from "@/assets/theme/components/palette";
+import theme from "@/assets/theme/theme";
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <TodoProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
         <Component {...pageProps} />
-      </TodoProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </Provider>
   );
 }
