@@ -10,7 +10,7 @@ import { addTodo, editTodo, deleteTodo } from "@/app/features/todoslice";
 type ButtonKind = "add" | "edit" | "delete" | "save" | "primary";
 
 type Props = Omit<ButtonProps, "onClick" | "color" | "variant" | "startIcon"> & {
-  type?: ButtonKind;
+  kind?: ButtonKind;
   targetId?: number;
   payloadText?: string;
   onClick?: () => void;
@@ -24,24 +24,24 @@ const icons: Record<Exclude<ButtonKind, "primary">, React.ReactElement> = {
 };
 
 const KButton = forwardRef<HTMLButtonElement, Props>(
-  ({ type = "primary", payloadText, targetId, onClick, children, ...rest }, ref) => {
+  ({ kind = "primary", payloadText, targetId, onClick, children, ...rest }, ref) => {
     const dispatch = useDispatch();
 
     const defaultAction = () => {
-      if (type === "add" && payloadText) dispatch(addTodo(payloadText));
-      if ((type === "edit" || type === "save") && targetId && payloadText)
+      if (kind === "add" && payloadText) dispatch(addTodo(payloadText));
+      if ((kind === "edit" || kind === "save") && targetId && payloadText)
         dispatch(editTodo({ id: targetId, text: payloadText }));
-      if (type === "delete" && targetId) dispatch(deleteTodo(targetId));
+      if (kind === "delete" && targetId) dispatch(deleteTodo(targetId));
     };
 
     const preset =
-      type === "delete"
+      kind === "delete"
         ? { variant: "outlined" as const, color: "error" as const, startIcon: icons.delete }
-        : type === "edit"
+        : kind === "edit"
         ? { variant: "outlined" as const, color: "secondary" as const, startIcon: icons.edit }
-        : type === "save"
+        : kind === "save"
         ? { variant: "contained" as const, color: "secondary" as const, startIcon: icons.save }
-        : type === "add"
+        : kind === "add"
         ? { variant: "contained" as const, color: "primary" as const, startIcon: icons.add }
         : { variant: "contained" as const, color: "primary" as const };
 

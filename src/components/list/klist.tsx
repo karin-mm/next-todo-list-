@@ -9,38 +9,48 @@ import { useDispatch, useSelector } from "react-redux";
 import { editTodo, deleteTodo } from "@/app/features/todoslice";
 import { RootState } from "@/app/store";
 
-const KList: React.FC = () => {
+type KListProps = {
+  children?: React.ReactNode;
+};
+
+const KList: React.FC<KListProps> = ({ children }) => {
   const todos = useSelector((state: RootState) => state.todos.items);
   const dispatch = useDispatch();
 
   return (
     <List>
-      {todos.map(todo => (
-        <ListItem
-          key={todo.id}
-          sx={{
-            backgroundColor: "background.paper",
-            mb: 1,
-            borderRadius: 1,
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <Checkbox
-            checked={todo.completed}
-            onChange={() => dispatch(editTodo({id: todo.id, text: todo.text}))}
-          />
-          <ListItemText
-            primary={todo.text}
+      {children ? (
+        children
+      ) : (
+        todos.map((todo) => (
+          <ListItem
+            key={todo.id}
             sx={{
-              textDecoration: todo.completed ? "line-through" : "none",
+              backgroundColor: "background.paper",
+              mb: 1,
+              borderRadius: 1,
+              display: "flex",
+              justifyContent: "space-between",
             }}
-          />
-          <IconButton onClick={() => dispatch(deleteTodo(todo.id))}>
-            <DeleteIcon />
-          </IconButton>
-        </ListItem>
-      ))}
+          >
+            <Checkbox
+              checked={todo.completed}
+              onChange={() =>
+                dispatch(editTodo({ id: todo.id, text: todo.text }))
+              }
+            />
+            <ListItemText
+              primary={todo.text}
+              sx={{
+                textDecoration: todo.completed ? "line-through" : "none",
+              }}
+            />
+            <IconButton onClick={() => dispatch(deleteTodo(todo.id))}>
+              <DeleteIcon />
+            </IconButton>
+          </ListItem>
+        ))
+      )}
     </List>
   );
 };
