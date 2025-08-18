@@ -5,7 +5,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import { useDispatch } from "react-redux";
-import { addTodo, editTodo, deleteTodo } from "@/app/features/todoslice";
+import { addTodo, editTodo, deleteTodo } from "@/context/features/todoslice";
 
 type ButtonKind = "add" | "edit" | "delete" | "save" | "primary";
 

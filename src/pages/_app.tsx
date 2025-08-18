@@ -1,6 +1,6 @@
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
-import { store } from "@/app/store";
+import { store } from "@/context/store";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import theme from "@/assets/theme/theme";
 

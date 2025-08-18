@@ -1,10 +1,10 @@
 import React, { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "@/app/store";
-
+import type { RootState } from "@/context/store";
 import {
   Box,
   Typography,
+  List,
   ListItem,
   ListItemText,
   Checkbox,
@@ -13,7 +13,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import KTextField from "@/components/textfield/ktextfield";
 import KButton from "@/components/button/kbutton";
-import { addTodo, editTodo, deleteTodo, toggleTodo } from "@/app/features/todoslice";
+import { addTodo, editTodo, deleteTodo, toggleTodo } from "@/context/features/todoslice";
 
 export default function Home() {
   const todos = useSelector((s: RootState) => s.todos.items);
@@ -64,76 +64,78 @@ export default function Home() {
           </KButton>
         </Box>
 
-        {todos.map((t) => (
-          <ListItem
-            key={t.id}
-            sx={{
-              bgcolor: "background.paper",
-              mb: 1,
-              borderRadius: 1,
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <Checkbox
-              checked={t.completed}
-              onChange={() => dispatch(toggleTodo(t.id))}
-            />
-
-            {editingId === t.id ? (
-              <KTextField
-                type="edit"
-                value={editingText}
-                onChangeValue={setEditingText}
-                targetId={t.id}
-                size="small"
-                autoFocus
+        <List>
+          {todos.map((todo) => (
+            <ListItem
+              key={todo.id}
+              sx={{
+                backgroundColor: "background.paper",
+                mb: 1,
+                borderRadius: 1,
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <Checkbox
+                checked={todo.completed}
+                onChange={() => dispatch(toggleTodo(todo.id))}
               />
-            ) : (
-              <ListItemText
-                primary={t.text}
-                sx={{
-                  textDecoration: t.completed ? "line-through" : "none",
-                }}
-              />
-            )}
 
-            <Box sx={{ display: "flex", gap: 1, ml: 2 }}>
-              {editingId === t.id ? (
-                <KButton
-                  kind="save"
-                  targetId={t.id}
-                  payloadText={editingText || undefined}
-                  onClick={() => {
-                    if (editingText.trim()) {
-                      dispatch(
-                        editTodo({ id: t.id, text: editingText.trim() })
-                      );
-                    }
-                    setEditingId(null);
-                    setEditingText("");
-                  }}
-                >
-                  Save
-                </KButton>
+              {editingId === todo.id ? (
+                <KTextField
+                  type="edit"
+                  value={editingText}
+                  onChangeValue={setEditingText}
+                  targetId={todo.id}
+                  size="small"
+                  autoFocus
+                />
               ) : (
-                <KButton
-                  kind="edit"
-                  onClick={() => {
-                    setEditingId(t.id);
-                    setEditingText(t.text);
+                <ListItemText
+                  primary={todo.text}
+                  sx={{
+                    textDecoration: todo.completed ? "line-through" : "none",
                   }}
-                >
-                  Edit
-                </KButton>
+                />
               )}
 
-              <IconButton onClick={() => dispatch(deleteTodo(t.id))}>
-                <DeleteIcon />
-              </IconButton>
-            </Box>
-          </ListItem>
-        ))}
+              <Box sx={{ display: "flex", gap: 1, ml: 2 }}>
+                {editingId === todo.id ? (
+                  <KButton
+                    kind="save"
+                    targetId={todo.id}
+                    payloadText={editingText || undefined}
+                    onClick={() => {
+                      if (editingText.trim()) {
+                        dispatch(
+                          editTodo({ id: todo.id, text: editingText.trim() })
+                        );
+                      }
+                      setEditingId(null);
+                      setEditingText("");
+                    }}
+                  >
+                    Save
+                  </KButton>
+                ) : (
+                  <KButton
+                    kind="edit"
+                    onClick={() => {
+                      setEditingId(todo.id);
+                      setEditingText(todo.text);
+                    }}
+                  >
+                    Edit
+                  </KButton>
+                )}
+
+                <IconButton onClick={() => dispatch(deleteTodo(todo.id))}>
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
+            </ListItem>
+          ))}
+        </List>
       </Box>
     </Box>
   );

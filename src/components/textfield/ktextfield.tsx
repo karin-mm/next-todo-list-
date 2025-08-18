@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import { useDispatch } from "react-redux";
-import { addTodo, editTodo } from "@/app/features/todoslice";
+import { addTodo, editTodo } from "@/context/features/todoslice";
 
 type FieldKind = "new" | "edit" | "search";
 
